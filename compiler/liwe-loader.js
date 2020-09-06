@@ -1,22 +1,82 @@
 const compiler = require('vue-template-compiler');
+const path = require('path');
+const fs = require('fs');
+// const loaderUtils = require('loader-utils');
+// var headerPath = path.resolve('header.js');
+//
+// this.addDependency(headerPath);
+//
+// fs.readFile(headerPath, 'utf-8', function(err, header) {
+//     if(err) return callback(err);
+//     callback(null, header + "\n" + source);
+// });
+// const options = getOptions(this);
+//
+// source = source.replace(/\[name\]/g, options.name);
 
 module.exports = function (source) {
+    // var callback = this.async();
+    let jsExist = false;
+    const PATH_JS = path.resolve(path.dirname(this._module.resource), 'index.js');
+    try {
+        fs.statSync(PATH_JS);
+        // js = fs.readFileSync(PATH_JS, 'utf-8');
+        jsExist = true;
+    } catch(ex) {
+        // 文件不存在
+    }
+
+//     if (js) {
+//         js = `function Page(config) {
+//     return class Store {
+//         @observable
+//     }
+// }
+// const store = ${js}`;
+//     }
+    const js = jsExist ?
+        `
+import Store from "./index.js"; 
+` :
+        `
+class Store {}
+`;
+
     const AST = compiler.compile(source).ast;
-    console.log(AST.children[0].children);
-    console.log(AST.children[2].children[0].children[0].children[0]);
+    // console.log(AST.children[4].events.click);
+    // console.log(AST.children[0].children);
+    // console.log(AST.children[2].children[0].children[0].children[0]);
     // 先用字符串了
     const result = `
 import React from "react";
+import { Provider, observer, inject } from "mobx-react";
+${js}
 
-export default function () { 
+const store = new Store();
+
+const App = inject('store')(observer(function (props) {
+    const store = props.store;
+     
     return (
         ${vue2jsx(AST)}
     );
+}));
+
+export default function () {
+    return (
+        <Provider store={store}>
+            <App />
+        </Provider>
+    );
 }
 `;
-    console.log(result);
-    // return result;
-    return 'import React from "react"; export default function () { return <div>123</div> }';
+    return result;
+    // console.log(result);
+    // return 'import React from "react"; export default function () { return <div>123</div> }';
+};
+
+const MAP_EVENT = {
+    'click': 'onClick',
 };
 
 // TODO type 肯定是用来描述节点类型的, 但是现在没空看了
@@ -36,8 +96,11 @@ function vue2jsx(elem) {
         if (hasTag) {
             const hasChildren = elem.children && elem.children.length;
             const tagFor = elem.attrsMap && elem.attrsMap['v-for'];
+            const hasEvent = elem.events && Object.keys(elem.events).length;
 
-            const inner = `<${elem.tag}${hasChildren ? `>${elem.children.map(vue2jsx).join('')}</${elem.tag}>` : '/>'}`;
+            const inner = `<${elem.tag}${hasEvent ? ` ${Object.entries(elem.events).map(([event, { value }]) => {
+                return `${MAP_EVENT[event]}={${value}}`;
+            })}` : ''}${hasChildren ? `>${elem.children.map(vue2jsx).join('')}</${elem.tag}>` : '/>'}`;
 
             if (tagFor) {
                 // const [, item, list] = tagFor.match(/^(\w+) in (\w+)$/);

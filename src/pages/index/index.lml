@@ -1,10 +1,11 @@
 <div>
     <h1>Hello world</h1>
     <ul>
-        <li v-for="item in list">
+        <li v-for="item in store.list">
             <span>{{item.name}}</span>
             <span>{{item.count}}</span>
             <span>{{item.addr}} {{item.code}}</span>
         </li>
     </ul>
+    <button @click="store.addOne">Add One</button>
 </div>
