@@ -1,0 +1,19 @@
+{
+  "name": "liwe2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RequireSun/liwe2.git"
+  },
+  "author": "RequireSun <kelvinsen@outlook.com>",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/RequireSun/liwe2/issues"
+  },
+  "homepage": "https://github.com/RequireSun/liwe2#readme"
+}
