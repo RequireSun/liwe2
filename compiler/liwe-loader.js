@@ -1,39 +1,18 @@
 const compiler = require('vue-template-compiler');
 const path = require('path');
 const fs = require('fs');
-// const loaderUtils = require('loader-utils');
-// var headerPath = path.resolve('header.js');
-//
-// this.addDependency(headerPath);
-//
-// fs.readFile(headerPath, 'utf-8', function(err, header) {
-//     if(err) return callback(err);
-//     callback(null, header + "\n" + source);
-// });
-// const options = getOptions(this);
-//
-// source = source.replace(/\[name\]/g, options.name);
 
 module.exports = function (source) {
-    // var callback = this.async();
     let jsExist = false;
     const PATH_JS = path.resolve(path.dirname(this._module.resource), 'index.js');
     try {
         fs.statSync(PATH_JS);
-        // js = fs.readFileSync(PATH_JS, 'utf-8');
         jsExist = true;
     } catch(ex) {
         // 文件不存在
     }
 
-//     if (js) {
-//         js = `function Page(config) {
-//     return class Store {
-//         @observable
-//     }
-// }
-// const store = ${js}`;
-//     }
+    // 不存在数据说明文件时要搞个假的 store
     const js = jsExist ?
         `
 import Store from "./index.js"; 
@@ -54,8 +33,10 @@ import { Provider, observer, inject } from "mobx-react";
 ${js}
 
 const store = new Store();
+// 调试用
 window.__store__ = store;
 
+// 数据注入
 const App = inject('store')(observer(function (props) {
     const { Components, store } = props;
     function $set(store, key, value) {
@@ -67,6 +48,7 @@ const App = inject('store')(observer(function (props) {
     );
 }));
 
+// provider 包裹
 export default function (props) {
     const { Components } = props;
     return (
@@ -85,13 +67,15 @@ const MAP_EVENT = {
     'click': 'onClick',
 };
 
-// TODO type 肯定是用来描述节点类型的, 但是现在没空看了
 function vue2jsx(elem) {
+    // TODO type 肯定是用来描述节点类型的, 但是现在没空看了
     const isText = elem.type === 2;
     if (isText) {
+        // 这里没有时间仔细去看文档, 应该是有方法能区分纯 text 和有数据绑定的 text 的
         if (elem.static) {
             return elem.text;
         } else {
+            // 有数据绑定的 text
             return elem.tokens.reduce((text, token) => {
                 return text.replace(new RegExp(`{{${token['@binding']}}}`, 'g'), `{${token['@binding']}}`);
             }, elem.text);
@@ -100,28 +84,39 @@ function vue2jsx(elem) {
         const hasTag = elem.tag;
 
         if (hasTag) {
+            // 有 tag, 是个标签
             const hasChildren = elem.children && elem.children.length;
             const tagFor = elem.attrsMap && elem.attrsMap['v-for'];
             const hasEvent = elem.events && Object.keys(elem.events).length;
             const hasBinds = elem.attrs && elem.attrs.length;
             const hasModel = elem.model;
 
-            const inner = `<${elem.tag}${hasEvent ? ` ${Object.entries(elem.events).map(([event, { value }]) => {
-                return `${MAP_EVENT[event]}={${value}}`;
-            })}` : ''}${hasBinds ? ` ${elem.attrs.map(({ name, value, dynamic }) => {
-                return dynamic !== undefined ? `${name}={${value}}` : `${name}=${value}`;
-            }).join(' ')}` : ''}${
+            const inner = `<${elem.tag}${
+                // 事件绑定 (目前只实现了 click)
+                hasEvent ? ` ${Object.entries(elem.events).map(([event, { value }]) => {
+                    return `${MAP_EVENT[event]}={${value}}`;
+                })}` : ''
+            }${
+                // 数据动态绑定
+                hasBinds ? ` ${elem.attrs.map(({ name, value, dynamic }) => {
+                    return dynamic !== undefined ? `${name}={${value}}` : `${name}=${value}`;
+                }).join(' ')}` : ''
+            }${
+                // 数据双向绑定 (目前只实现了 v-model)
                 hasModel ? ` value={${elem.model.value}} onChangeValue={${elem.model.callback.replace(/^function \(\$\$v\)/, '(\$\$\$\$v) =>')}}` : ''
-            }${hasChildren ? `>${elem.children.map(vue2jsx).join('')}</${elem.tag}>` : '/>'}`;
+            }${
+                // 子组件递归
+                hasChildren ? `>${elem.children.map(vue2jsx).join('')}</${elem.tag}>` : '/>'
+            }`;
 
             if (tagFor) {
-                // const [, item, list] = tagFor.match(/^(\w+) in (\w+)$/);
-                // return `{${list}.map((${item}) => ${inner})}`;
+                // v-for 循环逻辑
                 return `{${elem.for}.map((${elem.alias}) => ${inner})}`;
             } else {
                 return inner;
             }
         } else {
+            // 无 tag, 可能就是 innerText
             return elem.text;
         }
     }
