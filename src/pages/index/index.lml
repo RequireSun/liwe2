@@ -4,6 +4,7 @@
         <li v-for="item in list">
             <span>{{item.name}}</span>
             <span>{{item.count}}</span>
+            <span>{{item.addr}} {{item.code}}</span>
         </li>
     </ul>
 </div>
