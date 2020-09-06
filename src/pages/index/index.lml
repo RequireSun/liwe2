@@ -8,4 +8,5 @@
         </li>
     </ul>
     <button @click="store.addOne">Add One</button>
+    <Components.CheckboxGroup :options="store.options" v-model="store.selected" test="1" />
 </div>

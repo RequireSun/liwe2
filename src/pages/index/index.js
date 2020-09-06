@@ -7,7 +7,17 @@ export default class Store {
         count: 0,
         code: 918000,
         addr: 'dont know',
-    }];
+    }, ];
+    @observable
+    options = [{
+        label: 'label1',
+        value: 1,
+    }, {
+        label: 'label2',
+        value: 2,
+    }, ];
+    @observable
+    selected = [1];
 
     @action.bound
     addOne() {

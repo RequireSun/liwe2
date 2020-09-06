@@ -43,6 +43,7 @@ class Store {}
 `;
 
     const AST = compiler.compile(source).ast;
+    // console.log(AST.children[6]);
     // console.log(AST.children[4].events.click);
     // console.log(AST.children[0].children);
     // console.log(AST.children[2].children[0].children[0].children[0]);
@@ -53,19 +54,24 @@ import { Provider, observer, inject } from "mobx-react";
 ${js}
 
 const store = new Store();
+window.__store__ = store;
 
 const App = inject('store')(observer(function (props) {
-    const store = props.store;
-     
+    const { Components, store } = props;
+    function $set(store, key, value) {
+        store[key] = value;
+    }
+
     return (
         ${vue2jsx(AST)}
     );
 }));
 
-export default function () {
+export default function (props) {
+    const { Components } = props;
     return (
         <Provider store={store}>
-            <App />
+            <App Components={Components} />
         </Provider>
     );
 }
@@ -97,10 +103,16 @@ function vue2jsx(elem) {
             const hasChildren = elem.children && elem.children.length;
             const tagFor = elem.attrsMap && elem.attrsMap['v-for'];
             const hasEvent = elem.events && Object.keys(elem.events).length;
+            const hasBinds = elem.attrs && elem.attrs.length;
+            const hasModel = elem.model;
 
             const inner = `<${elem.tag}${hasEvent ? ` ${Object.entries(elem.events).map(([event, { value }]) => {
                 return `${MAP_EVENT[event]}={${value}}`;
-            })}` : ''}${hasChildren ? `>${elem.children.map(vue2jsx).join('')}</${elem.tag}>` : '/>'}`;
+            })}` : ''}${hasBinds ? ` ${elem.attrs.map(({ name, value, dynamic }) => {
+                return dynamic !== undefined ? `${name}={${value}}` : `${name}=${value}`;
+            }).join(' ')}` : ''}${
+                hasModel ? ` value={${elem.model.value}} onChangeValue={${elem.model.callback.replace(/^function \(\$\$v\)/, '(\$\$\$\$v) =>')}}` : ''
+            }${hasChildren ? `>${elem.children.map(vue2jsx).join('')}</${elem.tag}>` : '/>'}`;
 
             if (tagFor) {
                 // const [, item, list] = tagFor.match(/^(\w+) in (\w+)$/);
