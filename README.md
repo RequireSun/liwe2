@@ -37,8 +37,10 @@ Then go to the `/build` directory and open `index.html`。
 
 ## TODOs
 
-- [ ] 找个模板, 不要再用模板字符串了
-- [ ] vue 模板解析重构 (搞 AST 的对应关系, 不要直接 if-else 字符串拼接了)
+- [x] 找个模板, 不要再用模板字符串了
+- [ ] vue 模板解析重构
+    - [ ] 理解 vue AST 结构，修正逻辑
+    - [ ] 将 if-else 字符串拼接改为 AST 解析
 - [ ] lql 对应关系梳理
 - [ ] lql 解析改为编译时
 - [ ] lql `delete` 支持 (需改动 flora)
