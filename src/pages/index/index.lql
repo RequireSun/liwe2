@@ -1,0 +1,17 @@
+test_insert:
+INSERT INTO mytable(X,Y,Z)
+    VALUES(
+        (SELECT X FROM basetable WHERE ID = 8),
+        (SELECT Y FROM basetable WHERE ID = 8),
+        (SELECT Z FROM basetable WHERE ID = 8)
+    );
+
+test_select:
+SELECT name FROM bbc
+    WHERE population>(
+        SELECT population FROM bbc
+        WHERE name='Russia'
+    );
+
+simple_select:
+SELECT * FROM t;

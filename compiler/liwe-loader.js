@@ -1,13 +1,22 @@
-const compiler = require('vue-template-compiler');
 const path = require('path');
 const fs = require('fs');
+const compiler = require('vue-template-compiler');
+const LqlParser = require('./lql-parser');
 
 module.exports = function (source) {
     let jsExist = false;
-    const PATH_JS = path.resolve(path.dirname(this._module.resource), 'index.js');
+    let lqlContent = '';
+    const PATH_BASE = path.dirname(this._module.resource);
+    const PATH_JS = path.resolve(PATH_BASE, 'index.js');
+    const PATH_LQL = path.resolve(PATH_BASE, 'index.lql');
     try {
         fs.statSync(PATH_JS);
         jsExist = true;
+    } catch(ex) {
+        // 文件不存在
+    }
+    try {
+        lqlContent = fs.readFileSync(PATH_LQL, 'utf-8');
     } catch(ex) {
         // 文件不存在
     }
@@ -20,6 +29,10 @@ import Store from "./index.js";
         `
 class Store {}
 `;
+    if (lqlContent) {
+        lqlContent = LqlParser(lqlContent);
+        console.log(lqlContent);
+    }
 
     const AST = compiler.compile(source).ast;
     // console.log(AST.children[6]);
