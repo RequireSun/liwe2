@@ -34,3 +34,16 @@ Then go to the `/build` directory and open `index.html`。
 ## PS
 
 本代码仅为可行性测试用，未考虑代码可维护性、可扩展性、文档等其他内容。
+
+## TODOs
+
+- [ ] vue 模板解析重构 (搞 AST 的对应关系, 不要直接 if-else 字符串拼接了)
+- [ ] lql 对应关系梳理
+- [ ] lql 解析改为编译时
+- [ ] lql `delete` 支持 (需改动 flora)
+- [ ] loader 入口 & 引入方式调整
+- [ ] 双向绑定实现修正
+- [ ] 多字段双向绑定实现
+- [ ] 插件扩展
+    - [ ] 独立配置文件
+- [ ] loader 抽成独立项目 (未定: decorator 等 babel 特性放在哪个步骤上编)
