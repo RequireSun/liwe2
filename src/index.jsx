@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {
-    BrowserRouter as Router,
+    HashRouter as Router,
     Switch,
     Route,
     Link,
@@ -24,7 +24,7 @@ ReactDOM.render(
             </ul>
         </nav>
         <Switch>
-            <Route path="/">
+            <Route exact path="/">
                 <Index Components={Components} />
             </Route>
             <Route path="/form">

@@ -1,3 +1,4 @@
+-- TODO 其实数据结构的初始化写在这里应该也可以, 以后可以添加这个 feature
 -- TODO 语法对应关系还没想太仔细, 先用不严谨的写法实现一下 demo
 -- TODO validator 等 pre-post 函数的插入方式待商榷
 -- TODO flora 不支持解析 delete, 先用 update 顶上了

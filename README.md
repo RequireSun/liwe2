@@ -24,3 +24,7 @@ Then go to the `/build` directory and open `index.html`。
 ## 原理
 
 主要看 `compiler/liwe-loader` 文件，内部实现了 .vue -> .jsx 的转换逻辑。
+
+## PS
+
+本代码仅为可行性测试用，未考虑代码可维护性、可扩展性、文档等其他内容。

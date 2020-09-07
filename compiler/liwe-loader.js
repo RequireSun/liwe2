@@ -42,12 +42,15 @@ class Store {}
     // 先用字符串了
     const result = `
 import React from "react";
+import { extendObservable } from "mobx";
 import { Provider, observer, inject } from "mobx-react";
 ${js}
 
 const store = new Store();
 // 调试用
 window.__store__ = store;
+
+${lqlContent}
 
 // 数据注入
 const App = inject('store')(observer(function (props) {
@@ -128,7 +131,7 @@ function vue2jsx(elem) {
             }${
                 // 目前没搞清为啥原始 DOM 组件的 v-model 标记和自定义组件的不同
                 // 个人猜想可能是 input 用 input, checkbox 用 change 这种事件的区别, 导致了这一行为
-                changeDirective ? ` value={${changeDirective.value}} onChange={($$v) => $set(store, ${changeDirective.value.replace(/^store\./, '')}, $$v)}` : ''
+                changeDirective ? ` value={${changeDirective.value}} onChange={($$v) => $set(store, "${changeDirective.value.replace(/^store\./, '')}", $$v.target.value)}` : ''
             }${
                 // 子组件递归
                 hasChildren ? `>${elem.children.map(vue2jsx).join('')}</${elem.tag}>` : '/>'

@@ -4,14 +4,15 @@
             <span>{{todo.title}}</span>
             <span>{{todo.deadline}}</span>
             <input type="checkbox" :checked="todo.done" />
-            <Button>Remove</Button>
+            <!-- flora 库没有实现 DELETE 的解析, 先放在这了, 后续再补齐 -->
+            <!-- <button>Remove</button>-->
         </li>
     </ul>
-    <form>
+    <div>
         <label>Title</label>
         <input type="text" v-model="store.title" />
         <label>Deadline</label>
         <input type="text" v-model="store.deadline" />
-        <Button @click="insert_todo(),clear_todo_input_title(),clear_todo_input_deadline()">Add</Button>
-    </form>
+        <button @click="store.insert_todo(),store.clear_todo_input_title(),store.clear_todo_input_deadline()">Add</button>
+    </div>
 </div>
