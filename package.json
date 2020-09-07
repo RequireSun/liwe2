@@ -26,6 +26,7 @@
     "babel-loader": "^8.1.0",
     "html-webpack-plugin": "^4.4.1",
     "loader-utils": "^2.0.0",
+    "nunjucks": "^3.2.2",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"

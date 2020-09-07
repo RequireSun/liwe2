@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const compiler = require('vue-template-compiler');
+const nunjucks = require('nunjucks');
 const LqlParser = require('./lql-parser');
 
 module.exports = function (source) {
@@ -21,61 +22,20 @@ module.exports = function (source) {
         // 文件不存在
     }
 
-    // 不存在数据说明文件时要搞个假的 store
-    const js = jsExist ?
-        `
-import Store from "./index.js"; 
-` :
-        `
-class Store {}
-`;
     if (lqlContent) {
         lqlContent = LqlParser(lqlContent);
-        // console.log(lqlContent);
     }
 
     const AST = compiler.compile(source).ast;
-    // console.log(AST.children[6]);
-    // console.log(AST.children[4].events.click);
-    // console.log(AST.children[0].children);
-    // console.log(AST.children[2].children[0].children[0].children[0]);
-    // 先用字符串了
-    const result = `
-import React from "react";
-import { extendObservable } from "mobx";
-import { Provider, observer, inject } from "mobx-react";
-${js}
 
-const store = new Store();
-// 调试用
-window.__store__ = store;
-
-${lqlContent}
-
-// 数据注入
-const App = inject('store')(observer(function (props) {
-    const { Components, store } = props;
-    function $set(store, key, value) {
-        store[key] = value;
-    }
-
-    return (
-        ${vue2jsx(AST)}
-    );
-}));
-
-// provider 包裹
-export default function (props) {
-    const { Components } = props;
-    return (
-        <Provider store={store}>
-            <App Components={Components} />
-        </Provider>
-    );
-}
-`;
-    return result;
-    // console.log(result);
+    return nunjucks.render(path.resolve(__dirname, './template/lml.js'), {
+        hasStoreFile: jsExist,
+        storeEnhancers: [
+            lqlContent,
+        ],
+        jsx: vue2jsx(AST),
+    });
+    // 调试用的
     // return 'import React from "react"; export default function () { return <div>123</div> }';
 };
 
