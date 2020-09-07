@@ -1,0 +1,17 @@
+<div>
+    <ul>
+        <li v-for="todo in store.todos">
+            <span>{{todo.title}}</span>
+            <span>{{todo.deadline}}</span>
+            <input type="checkbox" :checked="todo.done" />
+            <Button>Remove</Button>
+        </li>
+    </ul>
+    <form>
+        <label>Title</label>
+        <input type="text" v-model="store.title" />
+        <label>Deadline</label>
+        <input type="text" v-model="store.deadline" />
+        <Button @click="insert_todo(),clear_todo_input_title(),clear_todo_input_deadline()">Add</Button>
+    </form>
+</div>

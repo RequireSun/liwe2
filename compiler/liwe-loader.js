@@ -31,7 +31,7 @@ class Store {}
 `;
     if (lqlContent) {
         lqlContent = LqlParser(lqlContent);
-        console.log(lqlContent);
+        // console.log(lqlContent);
     }
 
     const AST = compiler.compile(source).ast;
@@ -103,12 +103,20 @@ function vue2jsx(elem) {
             const hasEvent = elem.events && Object.keys(elem.events).length;
             const hasBinds = elem.attrs && elem.attrs.length;
             const hasModel = elem.model;
+            const changeDirective = elem.directives && elem.directives.find(di => di.name  === 'model');
 
             const inner = `<${elem.tag}${
                 // 事件绑定 (目前只实现了 click)
                 hasEvent ? ` ${Object.entries(elem.events).map(([event, { value }]) => {
-                    return `${MAP_EVENT[event]}={${value}}`;
-                })}` : ''
+                    if (!MAP_EVENT[event]) {
+                        return '';
+                    }
+                    if (/(\w+\(\),?)+/.test(value)) {
+                        return `${MAP_EVENT[event]}={() => { ${value} }}`;
+                    } else {
+                        return `${MAP_EVENT[event]}={${value}}`;
+                    }
+                }).join(' ')}` : ''
             }${
                 // 数据动态绑定
                 hasBinds ? ` ${elem.attrs.map(({ name, value, dynamic }) => {
@@ -116,7 +124,11 @@ function vue2jsx(elem) {
                 }).join(' ')}` : ''
             }${
                 // 数据双向绑定 (目前只实现了 v-model)
-                hasModel ? ` value={${elem.model.value}} onChangeValue={${elem.model.callback.replace(/^function \(\$\$v\)/, '(\$\$\$\$v) =>')}}` : ''
+                hasModel ? ` value={${elem.model.value}} onChange={${elem.model.callback.replace(/^function \(\$\$v\)/, '(\$\$\$\$v) =>')}}` : ''
+            }${
+                // 目前没搞清为啥原始 DOM 组件的 v-model 标记和自定义组件的不同
+                // 个人猜想可能是 input 用 input, checkbox 用 change 这种事件的区别, 导致了这一行为
+                changeDirective ? ` value={${changeDirective.value}} onChange={($$v) => $set(store, ${changeDirective.value.replace(/^store\./, '')}, $$v)}` : ''
             }${
                 // 子组件递归
                 hasChildren ? `>${elem.children.map(vue2jsx).join('')}</${elem.tag}>` : '/>'

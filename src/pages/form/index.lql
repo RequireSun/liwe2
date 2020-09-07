@@ -1,0 +1,13 @@
+-- TODO 语法对应关系还没想太仔细, 先用不严谨的写法实现一下 demo
+-- TODO validator 等 pre-post 函数的插入方式待商榷
+-- TODO flora 不支持解析 delete, 先用 update 顶上了
+
+insert_todo:
+INSERT INTO todos(title, deadline, done)
+    VALUES ((SELECT title FROM title), (SELECT deadline FROM deadline), FALSE);
+
+clear_todo_input_title:
+UPDATE title SET v = '' WHERE TRUE;
+
+clear_todo_input_deadline:
+UPDATE deadline SET v = '' WHERE TRUE;

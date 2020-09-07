@@ -1,3 +1,5 @@
+-- TODO 其实数据结构的初始化写在这里应该也可以, 以后可以添加这个 feature
+
 test_insert:
 INSERT INTO mytable(X,Y,Z)
     VALUES(
