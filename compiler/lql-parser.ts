@@ -108,7 +108,7 @@ module.exports = function (source) {
         }
     }
 
-    const results = [];
+    const results: string[] = [];
 
     for (const [name, ast] of Object.entries(ASTs)) {
         results.push(ast2action(name, ast));

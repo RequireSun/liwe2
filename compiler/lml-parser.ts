@@ -30,7 +30,7 @@ module.exports = function vue2jsx(elem) {
 
             const inner = `<${elem.tag}${
                 // 事件绑定 (目前只实现了 click)
-                hasEvent ? ` ${Object.entries(elem.events).map(([event, { value }]) => {
+                hasEvent ? ` ${(Object.entries(elem.events) as any[]).map(([event, { value }]) => {
                     if (!MAP_EVENT[event]) {
                         return '';
                     }

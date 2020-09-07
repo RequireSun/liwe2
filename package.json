@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack-cli --config config/webpack.config.js"
+    "build": "npm run build:compiler && webpack-cli --config config/webpack.config.js",
+    "build:compiler": "tsc"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "html-webpack-plugin": "^4.4.1",
     "loader-utils": "^2.0.0",
     "nunjucks": "^3.2.2",
+    "typescript": "^4.0.2",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
