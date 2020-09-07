@@ -37,6 +37,7 @@ Then go to the `/build` directory and open `index.html`。
 
 ## TODOs
 
+- [ ] 找个模板, 不要再用模板字符串了
 - [ ] vue 模板解析重构 (搞 AST 的对应关系, 不要直接 if-else 字符串拼接了)
 - [ ] lql 对应关系梳理
 - [ ] lql 解析改为编译时
