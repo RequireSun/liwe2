@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
 
 export default class Store {
     @observable
@@ -11,4 +11,9 @@ export default class Store {
     title = '';
     @observable
     deadline = '';
+
+    @action.bound
+    log(e) {
+        console.log(e);
+    }
 }

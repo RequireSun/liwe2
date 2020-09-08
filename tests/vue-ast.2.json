@@ -186,11 +186,21 @@
             {
               "name": "v-model",
               "value": "store.title"
+            },
+            {
+              "name": "@change",
+              "value": "store.log"
+            },
+            {
+              "name": "@input",
+              "value": "store.log"
             }
           ],
           "attrsMap": {
             "type": "text",
-            "v-model": "store.title"
+            "v-model": "store.title",
+            "@change": "store.log",
+            "@input": "store.log"
           },
           "rawAttrsMap": {},
           "children": [],
@@ -211,6 +221,21 @@
               "isDynamicArg": false
             }
           ],
+          "events": {
+            "change": {
+              "value": "store.log",
+              "dynamic": false
+            },
+            "input": [
+              {
+                "value": "if($event.target.composing)return;$set(store, \"title\", $event.target.value)"
+              },
+              {
+                "value": "store.log",
+                "dynamic": false
+              }
+            ]
+          },
           "static": false,
           "staticRoot": false,
           "props": [
@@ -218,12 +243,7 @@
               "name": "value",
               "value": "(store.title)"
             }
-          ],
-          "events": {
-            "input": {
-              "value": "if($event.target.composing)return;$set(store, \"title\", $event.target.value)"
-            }
-          }
+          ]
         },
         {
           "type": 3,

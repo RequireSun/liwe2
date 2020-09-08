@@ -21,6 +21,7 @@ window.__store__ = store;
 // 数据注入
 const App = inject('store')(observer(function (props) {
     const { Components, store } = props;
+    {# set 辅助函数 #}
     function $set(store, key, value) {
         store[key] = value;
     }

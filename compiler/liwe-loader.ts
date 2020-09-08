@@ -1,14 +1,14 @@
 import { ASTElement } from 'vue-template-compiler';
-const path = require('path');
-const fs = require('fs');
+import path from 'path';
+import fs from 'fs';
 const compiler = require('vue-template-compiler');
-const nunjucks = require('nunjucks');
-const LqlParser = require('./lql-parser');
-const LmlParser = require('./lml-parser');
+import nunjucks from 'nunjucks';
+import LqlParser from './lql-parser';
+import LmlParser from './lml-parser';
 
-const SWITCH_PRINT_VUE_AST = true;
+const SWITCH_PRINT_VUE_AST = false;
 
-module.exports = function (source) {
+export default function (source) {
     let jsExist = false;
     let lqlContent = '';
     const PATH_BASE = path.dirname(this._module.resource);
@@ -47,7 +47,7 @@ module.exports = function (source) {
         storeEnhancers: [
             lqlContent,
         ],
-        jsx: LmlParser(AST),
+        jsx: AST ? LmlParser(AST) : '',
     });
     // 调试用的 - 内部代码跑不通但是想运行一下的时候用
     // return 'import React from "react"; export default function () { return <div>123</div> }';

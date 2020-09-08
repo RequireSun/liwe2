@@ -10,7 +10,7 @@
     </ul>
     <div>
         <label>Title</label>
-        <input type="text" v-model="store.title" />
+        <input type="text" v-model="store.title" @change="store.log" @input="store.log" />
         <label>Deadline</label>
         <input type="text" v-model="store.deadline" />
         <button @click="store.insert_todo(),store.clear_todo_input_title(),store.clear_todo_input_deadline()">Add</button>

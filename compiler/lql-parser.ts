@@ -1,4 +1,5 @@
-const { Parser } = require('flora-sql-parser');
+import { Parser } from 'flora-sql-parser';
+
 const parser = new Parser();
 
 // 目前暂时的对应关系 -> table: 组件
@@ -80,7 +81,7 @@ function methodsRouter(store, ast) {
 `;
 
 // TODO 这里图省事, 先用逐行读取顶上了, 真要实现肯定要用 PEG 组 AST 的
-module.exports = function (source) {
+export default function (source) {
     let start = -1;
     let end = -1;
     const lines = source.split(/\r?\n/);
