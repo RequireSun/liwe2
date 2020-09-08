@@ -86,13 +86,13 @@
                   "value": "checkbox"
                 },
                 {
-                  "name": ":checked",
+                  "name": "v-model",
                   "value": "todo.done"
                 }
               ],
               "attrsMap": {
                 "type": "checkbox",
-                ":checked": "todo.done"
+                "v-model": "todo.done"
               },
               "rawAttrsMap": {},
               "children": [],
@@ -104,15 +104,28 @@
                 }
               ],
               "hasBindings": true,
-              "props": [
+              "directives": [
                 {
-                  "name": "checked",
+                  "name": "model",
+                  "rawName": "v-model",
                   "value": "todo.done",
-                  "dynamic": false
+                  "arg": null,
+                  "isDynamicArg": false
                 }
               ],
               "static": false,
-              "staticRoot": false
+              "staticRoot": false,
+              "props": [
+                {
+                  "name": "checked",
+                  "value": "Array.isArray(todo.done)?_i(todo.done,null)>-1:(todo.done)"
+                }
+              ],
+              "events": {
+                "change": {
+                  "value": "var $$a=todo.done,$$el=$event.target,$$c=$$el.checked?(true):(false);if(Array.isArray($$a)){var $$v=null,$$i=_i($$a,$$v);if($$el.checked){$$i<0&&($set(todo, \"done\", $$a.concat([$$v])))}else{$$i>-1&&($set(todo, \"done\", $$a.slice(0,$$i).concat($$a.slice($$i+1))))}}else{$set(todo, \"done\", $$c)}"
+                }
+              }
             }
           ],
           "for": "store.todos",

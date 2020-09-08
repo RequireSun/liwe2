@@ -24,6 +24,10 @@ const App = inject('store')(observer(function (props) {
     function $set(store, key, value) {
         store[key] = value;
     }
+    {# 不知道为什么, checkbox 的 props 注入里有个数组判断和 _i 调用, 先在这 fix 上, 后面找到规律再说 #}
+    function _i(arr) {
+        return arr.indexOf(true);
+    }
 
     return (
         {{ jsx | safe }}

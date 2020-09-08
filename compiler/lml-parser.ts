@@ -20,12 +20,69 @@ const MAP_EVENT = {
     'click': 'onClick',
 };
 
+// 这里先放在一个文件里了, 后面看情况是否独立拆分文件
 // 目前先做成返回 string, 后面再看要不要搞花活
 const MAP_RENDER: {
     [key in ASTType]: (AST: ASTNode) => string;
 } = {
     [ASTType.Element](AST: ASTElement) {
-        return '';
+        // TODO v-if 还没实现
+        const tag = AST.tag;
+        const attrs: string[] = [];
+        const inners: string[] = [];
+
+        // 事件绑定 (目前只实现了 click)
+        if (AST.events && Object.keys(AST.events).length) {
+            // TODO 这里没试出来 events -> value 为 handler 数组的情况, 后续需要注意
+            for (let [event, handlers] of Object.entries(AST.events)) {
+                // TODO 暂时忽略掉不支持的事件, 后面补齐
+                if (!MAP_EVENT[event]) {
+                    continue;
+                }
+                if (!Array.isArray(handlers)) {
+                    handlers = [handlers];
+                }
+
+                // TODO param 和 modifier 都还没试出来
+                for (const { value } of handlers) {
+                    // param 参数可能用在这里
+                    if (/(\w+\(\),?)+/.test(value)) {
+                        // 多个函数串联执行的 case `aaa(),bbb(),ccc()`
+                        // 在 JSX 中执行的时候需要包裹一层
+                        attrs.push(`${MAP_EVENT[event]}={() => { ${value} }}`);
+                    } else {
+                        attrs.push(`${MAP_EVENT[event]}={${value}}`);
+                    }
+                }
+            }
+        }
+
+        // props 传入
+        // TODO 使用 attrs 属性取其它属性直接透传到组件上
+        // 不明白为什么有的属性传递放在 props 上 (猜测: 原生组件) 有的放在 attrs 上 (猜测: 自定义组件)
+        // 虽然声明里 attrs 的 value 是 any, 但这里先凑合用了, 出问题再说
+        const declaredProps: { name: string; value: string; }[] = [];
+
+        if (AST.attrs) {
+            declaredProps.push(...AST.attrs);
+        }
+        if (AST.props) {
+            declaredProps.push(...AST.props);
+        }
+
+        if (declaredProps.length) {
+            for (const { name, value } of declaredProps) {
+                attrs.push(`${name}={${value}}`);
+            }
+        }
+
+        // 根据目前的推论, 自定义组件使用 model 时会有 model & directives 属性, 原生组件只有 directives
+        // TODO 只实现单个 v-model, 多个不同值双向绑定的事情以后再说
+
+        const strAttr = attrs.length ? ` ${attrs.join(' ')}` : '';
+        const strInner = inners.length ? inners.join('') : '';
+
+        return strInner ? `<${tag}${strAttr}>${strInner}</${tag}>` : `<${tag}${strAttr} />`;
     },
     [ASTType.Expression](AST: ASTExpression) {
         return AST.tokens.map(token => {

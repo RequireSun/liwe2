@@ -3,7 +3,7 @@
         <li v-for="todo in store.todos">
             <span>{{todo.title}}</span>
             <span>{{todo.deadline}}</span>
-            <input type="checkbox" :checked="todo.done" />
+            <input type="checkbox" v-model="todo.done" />
             <!-- flora 库没有实现 DELETE 的解析, 先放在这了, 后续再补齐 -->
             <!-- <button>Remove</button>-->
         </li>

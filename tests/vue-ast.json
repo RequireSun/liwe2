@@ -196,12 +196,17 @@
         {
           "name": "test",
           "value": "1"
+        },
+        {
+          "name": ":test2",
+          "value": "1"
         }
       ],
       "attrsMap": {
         ":options": "store.options",
         "v-model": "store.selected",
-        "test": "1"
+        "test": "1",
+        ":test2": "1"
       },
       "rawAttrsMap": {},
       "children": [],
@@ -216,6 +221,11 @@
         {
           "name": "test",
           "value": "\"1\""
+        },
+        {
+          "name": "test2",
+          "value": "1",
+          "dynamic": false
         }
       ],
       "directives": [

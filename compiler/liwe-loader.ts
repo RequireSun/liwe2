@@ -1,10 +1,12 @@
-// import { ASTElement } from 'vue-template-compiler';
+import { ASTElement } from 'vue-template-compiler';
 const path = require('path');
 const fs = require('fs');
 const compiler = require('vue-template-compiler');
 const nunjucks = require('nunjucks');
 const LqlParser = require('./lql-parser');
 const LmlParser = require('./lml-parser');
+
+const SWITCH_PRINT_VUE_AST = true;
 
 module.exports = function (source) {
     let jsExist = false;
@@ -31,12 +33,14 @@ module.exports = function (source) {
     const AST = compiler.compile(source).ast;
 
     // 调试专用 - 打印 vue AST 树
-    // forEachDeep(AST, (obj: any) => {
-    //     if (typeof(obj) === 'object' && obj !== null) {
-    //         delete (obj as ASTElement).parent;
-    //     }
-    // });
-    // console.log(JSON.stringify(AST, undefined, 2));
+    if (SWITCH_PRINT_VUE_AST) {
+        forEachDeep(AST, (obj: any) => {
+            if (typeof(obj) === 'object' && obj !== null) {
+                delete (obj as ASTElement).parent;
+            }
+        });
+        console.log(JSON.stringify(AST, undefined, 2));
+    }
 
     return nunjucks.render(path.resolve(__dirname, './template/lml.js'), {
         hasStoreFile: jsExist,
@@ -50,12 +54,12 @@ module.exports = function (source) {
 };
 
 // 调试用的 - 打印 vue AST 树
-// function forEachDeep(obj, fn) {
-//     for (const [, v] of Object.entries(obj)) {
-//         fn(v);
-//         if (typeof(v) === 'object' && v !== null) {
-//             forEachDeep(v, fn);
-//         }
-//     }
-// }
+function forEachDeep(obj, fn) {
+    for (const [, v] of Object.entries(obj)) {
+        fn(v);
+        if (typeof(v) === 'object' && v !== null) {
+            forEachDeep(v, fn);
+        }
+    }
+}
 
