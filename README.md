@@ -39,14 +39,18 @@ Then go to the `/build` directory and open `index.html`。
 
 - [x] 找个模板, 不要再用模板字符串了
 - [ ] vue 模板解析重构
-    - [ ] 理解 vue AST 结构，修正逻辑
-    - [ ] 将 if-else 字符串拼接改为 AST 解析
+    - [x] 理解 vue AST 结构，修正逻辑
+    - [x] 将 if-else 字符串拼接改为 AST 解析
+    - [ ] if-else 指令支持
 - [ ] lql 对应关系梳理
 - [ ] lql 解析改为编译时
 - [ ] lql `delete` 支持 (需改动 flora)
+- [ ] lql 改用 yaml 或其他格式保存
 - [ ] loader 入口 & 引入方式调整
-- [ ] 双向绑定实现修正
+- [x] 双向绑定实现修正
 - [ ] 多字段双向绑定实现
 - [ ] 插件扩展
     - [ ] 独立配置文件
 - [ ] loader 抽成独立项目 (未定: decorator 等 babel 特性放在哪个步骤上编)
+- [ ] 全局 / 支持函数从嵌入式改为引入的类库
+- [ ] 支持可配置数据存储库
