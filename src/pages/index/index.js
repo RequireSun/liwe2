@@ -18,6 +18,10 @@ export default class Store {
     }, ];
     @observable
     selected = [1];
+    @observable
+    number1 = 1;
+    @observable
+    number2 = 2;
 
     @action.bound
     addOne() {

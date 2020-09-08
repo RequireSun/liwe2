@@ -10,4 +10,5 @@
     </ul>
     <button @click="store.addOne">Add One</button>
     <Components.CheckboxGroup :options="store.options" v-model="store.selected" test="1" />
+    <p>Another test for expression: {{store.number1}} + {{store.number2}} = {{store.number1 + store.number2}}</p>
 </div>

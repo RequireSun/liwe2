@@ -1,0 +1,338 @@
+{
+  "type": 1,
+  "tag": "div",
+  "attrsList": [],
+  "attrsMap": {},
+  "rawAttrsMap": {},
+  "children": [
+    {
+      "type": 1,
+      "tag": "ul",
+      "attrsList": [],
+      "attrsMap": {},
+      "rawAttrsMap": {},
+      "children": [
+        {
+          "type": 1,
+          "tag": "li",
+          "attrsList": [],
+          "attrsMap": {
+            "v-for": "todo in store.todos"
+          },
+          "rawAttrsMap": {},
+          "children": [
+            {
+              "type": 1,
+              "tag": "span",
+              "attrsList": [],
+              "attrsMap": {},
+              "rawAttrsMap": {},
+              "children": [
+                {
+                  "type": 2,
+                  "expression": "_s(todo.title)",
+                  "tokens": [
+                    {
+                      "@binding": "todo.title"
+                    }
+                  ],
+                  "text": "{{todo.title}}",
+                  "static": false
+                }
+              ],
+              "plain": true,
+              "static": false,
+              "staticRoot": false
+            },
+            {
+              "type": 3,
+              "text": " ",
+              "static": true
+            },
+            {
+              "type": 1,
+              "tag": "span",
+              "attrsList": [],
+              "attrsMap": {},
+              "rawAttrsMap": {},
+              "children": [
+                {
+                  "type": 2,
+                  "expression": "_s(todo.deadline)",
+                  "tokens": [
+                    {
+                      "@binding": "todo.deadline"
+                    }
+                  ],
+                  "text": "{{todo.deadline}}",
+                  "static": false
+                }
+              ],
+              "plain": true,
+              "static": false,
+              "staticRoot": false
+            },
+            {
+              "type": 3,
+              "text": " ",
+              "static": true
+            },
+            {
+              "type": 1,
+              "tag": "input",
+              "attrsList": [
+                {
+                  "name": "type",
+                  "value": "checkbox"
+                },
+                {
+                  "name": ":checked",
+                  "value": "todo.done"
+                }
+              ],
+              "attrsMap": {
+                "type": "checkbox",
+                ":checked": "todo.done"
+              },
+              "rawAttrsMap": {},
+              "children": [],
+              "plain": false,
+              "attrs": [
+                {
+                  "name": "type",
+                  "value": "\"checkbox\""
+                }
+              ],
+              "hasBindings": true,
+              "props": [
+                {
+                  "name": "checked",
+                  "value": "todo.done",
+                  "dynamic": false
+                }
+              ],
+              "static": false,
+              "staticRoot": false
+            }
+          ],
+          "for": "store.todos",
+          "alias": "todo",
+          "plain": true,
+          "static": false,
+          "staticRoot": false,
+          "forProcessed": true
+        }
+      ],
+      "plain": true,
+      "static": false,
+      "staticRoot": false
+    },
+    {
+      "type": 3,
+      "text": " ",
+      "static": true
+    },
+    {
+      "type": 1,
+      "tag": "div",
+      "attrsList": [],
+      "attrsMap": {},
+      "rawAttrsMap": {},
+      "children": [
+        {
+          "type": 1,
+          "tag": "label",
+          "attrsList": [],
+          "attrsMap": {},
+          "rawAttrsMap": {},
+          "children": [
+            {
+              "type": 3,
+              "text": "Title",
+              "static": true
+            }
+          ],
+          "plain": true,
+          "static": true,
+          "staticInFor": false,
+          "staticRoot": false
+        },
+        {
+          "type": 3,
+          "text": " ",
+          "static": true
+        },
+        {
+          "type": 1,
+          "tag": "input",
+          "attrsList": [
+            {
+              "name": "type",
+              "value": "text"
+            },
+            {
+              "name": "v-model",
+              "value": "store.title"
+            }
+          ],
+          "attrsMap": {
+            "type": "text",
+            "v-model": "store.title"
+          },
+          "rawAttrsMap": {},
+          "children": [],
+          "plain": false,
+          "attrs": [
+            {
+              "name": "type",
+              "value": "\"text\""
+            }
+          ],
+          "hasBindings": true,
+          "directives": [
+            {
+              "name": "model",
+              "rawName": "v-model",
+              "value": "store.title",
+              "arg": null,
+              "isDynamicArg": false
+            }
+          ],
+          "static": false,
+          "staticRoot": false,
+          "props": [
+            {
+              "name": "value",
+              "value": "(store.title)"
+            }
+          ],
+          "events": {
+            "input": {
+              "value": "if($event.target.composing)return;$set(store, \"title\", $event.target.value)"
+            }
+          }
+        },
+        {
+          "type": 3,
+          "text": " ",
+          "static": true
+        },
+        {
+          "type": 1,
+          "tag": "label",
+          "attrsList": [],
+          "attrsMap": {},
+          "rawAttrsMap": {},
+          "children": [
+            {
+              "type": 3,
+              "text": "Deadline",
+              "static": true
+            }
+          ],
+          "plain": true,
+          "static": true,
+          "staticInFor": false,
+          "staticRoot": false
+        },
+        {
+          "type": 3,
+          "text": " ",
+          "static": true
+        },
+        {
+          "type": 1,
+          "tag": "input",
+          "attrsList": [
+            {
+              "name": "type",
+              "value": "text"
+            },
+            {
+              "name": "v-model",
+              "value": "store.deadline"
+            }
+          ],
+          "attrsMap": {
+            "type": "text",
+            "v-model": "store.deadline"
+          },
+          "rawAttrsMap": {},
+          "children": [],
+          "plain": false,
+          "attrs": [
+            {
+              "name": "type",
+              "value": "\"text\""
+            }
+          ],
+          "hasBindings": true,
+          "directives": [
+            {
+              "name": "model",
+              "rawName": "v-model",
+              "value": "store.deadline",
+              "arg": null,
+              "isDynamicArg": false
+            }
+          ],
+          "static": false,
+          "staticRoot": false,
+          "props": [
+            {
+              "name": "value",
+              "value": "(store.deadline)"
+            }
+          ],
+          "events": {
+            "input": {
+              "value": "if($event.target.composing)return;$set(store, \"deadline\", $event.target.value)"
+            }
+          }
+        },
+        {
+          "type": 3,
+          "text": " ",
+          "static": true
+        },
+        {
+          "type": 1,
+          "tag": "button",
+          "attrsList": [
+            {
+              "name": "@click",
+              "value": "store.insert_todo(),store.clear_todo_input_title(),store.clear_todo_input_deadline()"
+            }
+          ],
+          "attrsMap": {
+            "@click": "store.insert_todo(),store.clear_todo_input_title(),store.clear_todo_input_deadline()"
+          },
+          "rawAttrsMap": {},
+          "children": [
+            {
+              "type": 3,
+              "text": "Add",
+              "static": true
+            }
+          ],
+          "plain": false,
+          "hasBindings": true,
+          "events": {
+            "click": {
+              "value": "store.insert_todo(),store.clear_todo_input_title(),store.clear_todo_input_deadline()",
+              "dynamic": false
+            }
+          },
+          "static": false,
+          "staticRoot": false
+        }
+      ],
+      "plain": true,
+      "static": false,
+      "staticRoot": false
+    }
+  ],
+  "plain": true,
+  "static": false,
+  "staticRoot": false
+}

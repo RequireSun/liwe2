@@ -1,0 +1,279 @@
+{
+  "type": 1,
+  "tag": "div",
+  "attrsList": [],
+  "attrsMap": {},
+  "rawAttrsMap": {},
+  "children": [
+    {
+      "type": 1,
+      "tag": "h1",
+      "attrsList": [],
+      "attrsMap": {},
+      "rawAttrsMap": {},
+      "children": [
+        {
+          "type": 3,
+          "text": "Hello world",
+          "static": true
+        }
+      ],
+      "plain": true,
+      "static": true,
+      "staticInFor": false,
+      "staticRoot": false
+    },
+    {
+      "type": 3,
+      "text": " ",
+      "static": true
+    },
+    {
+      "type": 1,
+      "tag": "ul",
+      "attrsList": [],
+      "attrsMap": {},
+      "rawAttrsMap": {},
+      "children": [
+        {
+          "type": 1,
+          "tag": "li",
+          "attrsList": [],
+          "attrsMap": {
+            "v-for": "item in store.list"
+          },
+          "rawAttrsMap": {},
+          "children": [
+            {
+              "type": 1,
+              "tag": "span",
+              "attrsList": [],
+              "attrsMap": {},
+              "rawAttrsMap": {},
+              "children": [
+                {
+                  "type": 2,
+                  "expression": "_s(item.name)",
+                  "tokens": [
+                    {
+                      "@binding": "item.name"
+                    }
+                  ],
+                  "text": "{{item.name}}",
+                  "static": false
+                }
+              ],
+              "plain": true,
+              "static": false,
+              "staticRoot": false
+            },
+            {
+              "type": 3,
+              "text": " ",
+              "static": true
+            },
+            {
+              "type": 1,
+              "tag": "span",
+              "attrsList": [],
+              "attrsMap": {},
+              "rawAttrsMap": {},
+              "children": [
+                {
+                  "type": 2,
+                  "expression": "_s(item.count)",
+                  "tokens": [
+                    {
+                      "@binding": "item.count"
+                    }
+                  ],
+                  "text": "{{item.count}}",
+                  "static": false
+                }
+              ],
+              "plain": true,
+              "static": false,
+              "staticRoot": false
+            },
+            {
+              "type": 3,
+              "text": " ",
+              "static": true
+            },
+            {
+              "type": 1,
+              "tag": "span",
+              "attrsList": [],
+              "attrsMap": {},
+              "rawAttrsMap": {},
+              "children": [
+                {
+                  "type": 2,
+                  "expression": "_s(item.addr)+\" \"+_s(item.code)",
+                  "tokens": [
+                    {
+                      "@binding": "item.addr"
+                    },
+                    " ",
+                    {
+                      "@binding": "item.code"
+                    }
+                  ],
+                  "text": "{{item.addr}} {{item.code}}",
+                  "static": false
+                }
+              ],
+              "plain": true,
+              "static": false,
+              "staticRoot": false
+            }
+          ],
+          "for": "store.list",
+          "alias": "item",
+          "plain": true,
+          "static": false,
+          "staticRoot": false,
+          "forProcessed": true
+        }
+      ],
+      "plain": true,
+      "static": false,
+      "staticRoot": false
+    },
+    {
+      "type": 3,
+      "text": " ",
+      "static": true
+    },
+    {
+      "type": 1,
+      "tag": "button",
+      "attrsList": [
+        {
+          "name": "@click",
+          "value": "store.addOne"
+        }
+      ],
+      "attrsMap": {
+        "@click": "store.addOne"
+      },
+      "rawAttrsMap": {},
+      "children": [
+        {
+          "type": 3,
+          "text": "Add One",
+          "static": true
+        }
+      ],
+      "plain": false,
+      "hasBindings": true,
+      "events": {
+        "click": {
+          "value": "store.addOne",
+          "dynamic": false
+        }
+      },
+      "static": false,
+      "staticRoot": false
+    },
+    {
+      "type": 3,
+      "text": " ",
+      "static": true
+    },
+    {
+      "type": 1,
+      "tag": "Components.CheckboxGroup",
+      "attrsList": [
+        {
+          "name": ":options",
+          "value": "store.options"
+        },
+        {
+          "name": "v-model",
+          "value": "store.selected"
+        },
+        {
+          "name": "test",
+          "value": "1"
+        }
+      ],
+      "attrsMap": {
+        ":options": "store.options",
+        "v-model": "store.selected",
+        "test": "1"
+      },
+      "rawAttrsMap": {},
+      "children": [],
+      "plain": false,
+      "hasBindings": true,
+      "attrs": [
+        {
+          "name": "options",
+          "value": "store.options",
+          "dynamic": false
+        },
+        {
+          "name": "test",
+          "value": "\"1\""
+        }
+      ],
+      "directives": [
+        {
+          "name": "model",
+          "rawName": "v-model",
+          "value": "store.selected",
+          "arg": null,
+          "isDynamicArg": false
+        }
+      ],
+      "static": false,
+      "staticRoot": false,
+      "model": {
+        "value": "(store.selected)",
+        "expression": "\"store.selected\"",
+        "callback": "function ($$v) {$set(store, \"selected\", $$v)}"
+      }
+    },
+    {
+      "type": 3,
+      "text": " ",
+      "static": true
+    },
+    {
+      "type": 1,
+      "tag": "p",
+      "attrsList": [],
+      "attrsMap": {},
+      "rawAttrsMap": {},
+      "children": [
+        {
+          "type": 2,
+          "expression": "\"Another test for expression: \"+_s(store.number1)+\" + \"+_s(store.number2)+\" = \"+_s(store.number1 + store.number2)",
+          "tokens": [
+            "Another test for expression: ",
+            {
+              "@binding": "store.number1"
+            },
+            " + ",
+            {
+              "@binding": "store.number2"
+            },
+            " = ",
+            {
+              "@binding": "store.number1 + store.number2"
+            }
+          ],
+          "text": "Another test for expression: {{store.number1}} + {{store.number2}} = {{store.number1 + store.number2}}",
+          "static": false
+        }
+      ],
+      "plain": true,
+      "static": false,
+      "staticRoot": false
+    }
+  ],
+  "plain": true,
+  "static": false,
+  "staticRoot": false
+}

@@ -1,3 +1,4 @@
+// import { ASTElement } from 'vue-template-compiler';
 const path = require('path');
 const fs = require('fs');
 const compiler = require('vue-template-compiler');
@@ -29,6 +30,14 @@ module.exports = function (source) {
 
     const AST = compiler.compile(source).ast;
 
+    // 调试专用 - 打印 vue AST 树
+    // forEachDeep(AST, (obj: any) => {
+    //     if (typeof(obj) === 'object' && obj !== null) {
+    //         delete (obj as ASTElement).parent;
+    //     }
+    // });
+    // console.log(JSON.stringify(AST, undefined, 2));
+
     return nunjucks.render(path.resolve(__dirname, './template/lml.js'), {
         hasStoreFile: jsExist,
         storeEnhancers: [
@@ -36,7 +45,17 @@ module.exports = function (source) {
         ],
         jsx: LmlParser(AST),
     });
-    // 调试用的
+    // 调试用的 - 内部代码跑不通但是想运行一下的时候用
     // return 'import React from "react"; export default function () { return <div>123</div> }';
 };
+
+// 调试用的 - 打印 vue AST 树
+// function forEachDeep(obj, fn) {
+//     for (const [, v] of Object.entries(obj)) {
+//         fn(v);
+//         if (typeof(v) === 'object' && v !== null) {
+//             forEachDeep(v, fn);
+//         }
+//     }
+// }
 
