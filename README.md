@@ -29,6 +29,8 @@ Then go to the `/build` directory and open `index.html`。
 
 + lql
 
+    语法介绍：[LQL.md](./LQL.md)
+
     主要看 `compiler/lql-loader` 文件，为了快速搞出来，暂时没有搞成编译时，而采取了 schema 递归调用的方式，真正实战时可以根据当前的 AST 树直接生成函数嵌套调用格式的 js 文件。
 
 ### 优点
