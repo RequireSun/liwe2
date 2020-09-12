@@ -22,11 +22,53 @@ LQL 语法说明
 
 ### 读取
 
-__TODO__
+#### 指定下标
 
-（`slice`）从名为 `property_name` 的数组属性中读取 `index1` 到 `index2` 之间的记录。
+从名为 `property_name` 的数组属性中读取 `index1` 到 `index2` 之间的记录。
 
-（`filter`）从名为 `property_name` 的数组属性中读取
+```SQL
+SELECT * FROM property_name LIMIT index1, index2
+```
+
+等价语句：`property_name.slice(index1, index2)`
+
+__注意：LIMIT 语法与 slice 函数参数定义不同__
+
+#### 指定条件
+
+从名为 `property_name` 的数组属性中读取 `key` 值为 `value` 的记录。
+
+```SQL
+SELECT * FROM property_name WHERE key=value
+```
+
+等价语句：`property_name.filter(record => record.key === value)`
+
+##### 变种 - 多条件并联
+
+从名为 `property_name` 的数组属性中读取 `key1` 值为 `1001` 或 `1002`，`key2` 值为 `'yes'` 的记录。
+
+```SQL
+SELECT * FROM property_name WHERE (key1 = 1001 OR key1 = 1002) AND key2 = 'yes'
+```
+
+等价语句：`property_name.filter(record => (record.key1 === 1001 || key1 === 1002) && key2 === 'yes')`
+
+#### 提取记录集合内的特定属性形成新集合
+
+从名为 `property_name` 的数组属性中按照某条件读取一些记录，然后提取每条记录中的 `name`、`age` 属性形成新的记录集合。
+
+```SQL
+SELECT name, age FROM property_name WHERE ...
+```
+
+等价语句：
+
+```javascript
+property_name.filter(...).map(({ name, age }) => ({ name, age }))
+```
+
+_Ps：感觉用处不大，可以往后放一放_
 
 ### 新增
 
@@ -148,9 +190,11 @@ __TODO__
     可能需要通过自定义函数实现了
     
     或者是将 `index` 属性设置为关键字，修改后直接影响整个数组的排序，这样在插入的时候也可以随意控制了
+    
     - [ ] 读取 / 写入时数组 / 对象的转换
     
         要不要限定我这里的输出都是数组（use `filter`, no `find`），这样似乎从概念上更好理解
+        
 - [ ] 类 `a.b.c.d` 格式的深层级数据修改
 - [ ] `WHERE` 与 `find` 的关系对应
 - [ ] 嵌套语句
