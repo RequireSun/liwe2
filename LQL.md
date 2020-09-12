@@ -7,7 +7,9 @@ LQL 语法说明
 
 | DB | LQL |
 | --- | --- |
+| DATABASE | 每个独立的数据仓库（页面 or 引入的通用数据仓库） |
 | TABLE | @observable 修饰的属性 |
+| RECORD | 集合中的一条记录（数组元素 or 对象属性） |
 
 ## 关键字
 
@@ -22,12 +24,26 @@ LQL 语法说明
 
 __TODO__
 
+（`slice`）从名为 `property_name` 的数组属性中读取 `index1` 到 `index2` 之间的记录。
+
+（`filter`）从名为 `property_name` 的数组属性中读取
+
 ### 新增
 
-向名为 `property_name` 的数组属性中 push 一个对象：`{ key1: value1, key2: value2, key3: value3 }`。
+向名为 `property_name` 的数组属性中新增一个对象：`{ key1: value1, key2: value2, key3: value3 }`。
 
 ```SQL
 INSERT INTO property_name(key1, key2, key3) VALUES(value1, value2, value3)
+```
+
+等价语句：
+
+```javascript
+property_name.push({ 
+    key1: value1, 
+    key2: value2, 
+    key3: value3,
+})
 ```
 
 #### 元素为非对象时
@@ -38,12 +54,21 @@ INSERT INTO property_name(key1, key2, key3) VALUES(value1, value2, value3)
 INSERT INTO property_name VALUES(value)
 ```
 
+等价语句：`property_name.push(value)`
+
 ### 修改
 
 修改名为 `property_name` 的数组属性中下标为 `n` 的记录（`key1 => value1`，`key2 => value2`）：
 
 ```SQL
 UPDATE property_name SET key1 = value1, key2 = value2 WHERE index = n
+```
+
+等价语句：
+
+```javascript
+property_name[n].key1 = value1;
+property_name[n].key2 = value2;
 ```
 
 #### 元素为非对象时
@@ -54,7 +79,11 @@ UPDATE property_name SET key1 = value1, key2 = value2 WHERE index = n
 UPDATE property_name SET value=value WHERE index = n
 ```
 
+等价语句：`property_name[n] = value`
+
 ### 删除
+
+__TODO：这里是用 `delete` 还是 `splice`?__
 
 删除名为 `property_name` 的数组属性中下标为 `n` 的记录：
 
@@ -80,6 +109,8 @@ __TODO__
 UPDATE property_name SET key1 = value1
 ```
 
+等价语句：`property_name.key1 = value1`
+
 ### 删除
 
 在名为 `property_name` 的对象属性中删除一个属性：`key1`。
@@ -87,6 +118,8 @@ UPDATE property_name SET key1 = value1
 ```SQL
 DELETE FROM property_name WHERE key = key1
 ```
+
+等价语句：`delete property_name.key1`
 
 ## 原始值
 
@@ -102,13 +135,24 @@ __TODO__
 UPDATE property_name SET value = value
 ```
 
+等价语句：`property_name = value`
+
 ## 初始化页面数据仓库
 
 __TODO__
 
 ## TODOs
 
-- [ ] 数组顺序修改 / 插入位置控制
+- [ ] 数组顺序修改 / 插入位置控制（`splice`）
+
+    可能需要通过自定义函数实现了
+    
+    或者是将 `index` 属性设置为关键字，修改后直接影响整个数组的排序，这样在插入的时候也可以随意控制了
+    - [ ] 读取 / 写入时数组 / 对象的转换
+    
+        要不要限定我这里的输出都是数组（use `filter`, no `find`），这样似乎从概念上更好理解
 - [ ] 类 `a.b.c.d` 格式的深层级数据修改
 - [ ] `WHERE` 与 `find` 的关系对应
 - [ ] 嵌套语句
+- [ ] 初始化数据结构语句
+    - [ ] 对象型属性如何初始化
