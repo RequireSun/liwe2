@@ -1,6 +1,8 @@
 LQL 语法说明
 ===
 
+[TOC]
+
 页面数据仓库 ROOT 上的任何属性均由初始化脚本 / JS 生成，不可动态修改，所以不提供任何删除、新增 ROOT 属性的指令。 
 
 对应关系:
@@ -11,12 +13,14 @@ LQL 语法说明
 | TABLE | @observable 修饰的属性 |
 | RECORD | 集合中的一条记录（数组元素 or 对象属性） |
 
-## 关键字
+## 保留字
 
 | 名称 | 场景 | 介绍 |
 | --- | --- | --- |
-| index | `WHERE` 子句中 | 作下标查询时用 |
-| value | `UPDATE` 子句中 | 表示更新指定记录的整个值（而非某个属性） |
+| _index | `WHERE` 子句中 | 作下标查询时用 |
+| _value | `UPDATE` 子句中 | 表示更新指定记录的整个值（而非某个属性） |
+| _name | 保留 | 保留 |
+| _id | 保留 | 保留 |
 
 ## 数组操作
 
@@ -103,7 +107,7 @@ INSERT INTO property_name VALUES(value)
 修改名为 `property_name` 的数组属性中下标为 `n` 的记录（`key1 => value1`，`key2 => value2`）：
 
 ```SQL
-UPDATE property_name SET key1 = value1, key2 = value2 WHERE index = n
+UPDATE property_name SET key1 = value1, key2 = value2 WHERE _index = n
 ```
 
 等价语句：
@@ -118,7 +122,7 @@ property_name[n].key2 = value2;
 修改名为 `property_name` 的数组属性中下标为 `n` 的记录为原始值 `value`。
 
 ```SQL
-UPDATE property_name SET value=value WHERE index = n
+UPDATE property_name SET _value=value WHERE _index = n
 ```
 
 等价语句：`property_name[n] = value`
@@ -130,7 +134,7 @@ __TODO：这里是用 `delete` 还是 `splice`?__
 删除名为 `property_name` 的数组属性中下标为 `n` 的记录：
 
 ```SQL
-DELETE FROM property_name WHERE index = n
+DELETE FROM property_name WHERE _index = n
 ```
 
 ### 顺序控制
@@ -171,14 +175,20 @@ DELETE FROM property_name WHERE key = key1
 
 ### 读取
 
-__TODO__
+读取名为 `property_name` 的属性值：
+
+```SQL
+SELECT _value from property_name
+```
+
+等价语句：`property_name`
 
 ### 修改
 
 修改名为 `property_name` 的属性的值为 `value`：
 
 ```SQL
-UPDATE property_name SET value = value
+UPDATE property_name SET _value = value
 ```
 
 等价语句：`property_name = value`
@@ -186,6 +196,31 @@ UPDATE property_name SET value = value
 ## 初始化页面数据仓库
 
 __TODO__
+
+## 内置函数
+
+## 组合操作
+
+争取做到 95% 还原度的 SQL 语句，直接举例演示：
+
+### Form -> Table Row
+
+取页面的字符串属性 `name`、`address`、`phone` 的值形成一条记录，插入到数组属性 `records` 中：
+
+```SQL
+INSERT INTO records(name, address, phone)
+    VALUES((SELECT _value FROM name), (SELECT _value FROM address), (SELECT _value FROM phone))
+```
+
+等价语句：
+
+```javascript
+records.push({
+    name: name,
+    address: address,
+    phone: phone,
+});
+```
 
 ## TODOs
 
@@ -204,6 +239,9 @@ __TODO__
 - [ ] 嵌套语句
 - [ ] 初始化数据结构语句
     - [ ] 对象型属性如何初始化
+- [ ] 内置函数（如网络请求等）
+- [ ] 校验等插入流程、异常流程如何做
+- [ ] 关键字以 `#` 开头是否合理，是否会导致问题
 
 ## 问题 & 思考
 
