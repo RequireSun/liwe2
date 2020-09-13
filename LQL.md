@@ -60,6 +60,8 @@ SELECT * FROM property_name WHERE (key1 = 1001 OR key1 = 1002) AND key2 = 'yes'
 
 #### 提取记录集合内的特定属性形成新集合
 
+_Ps：感觉用处不大，可以往后放一放_
+
 从名为 `property_name` 的数组属性中按照某条件读取一些记录，然后提取每条记录中的 `name`、`age` 属性形成新的记录集合。
 
 ```SQL
@@ -72,7 +74,17 @@ SELECT name, age FROM property_name WHERE ...
 property_name.filter(...).map(({ name, age }) => ({ name, age }))
 ```
 
-_Ps：感觉用处不大，可以往后放一放_
+从名为 `property_name` 的数组属性中按照某条件读取一些记录，然后提取每条记录中的 `name` 命名为 `customer`、`age >= 18` 生成的布尔值命名为 `adult` 属性形成新的记录集合。
+
+```SQL
+SELECT name AS customer, age >= 18 AS adult FROM property_name WHERE ...
+```
+
+等价语句：
+
+```javascript
+property_name.filter(...).map(({ name, age }) => ({ customer: name, adult: age >= 18 }))
+```
 
 ### 新增
 
@@ -97,7 +109,7 @@ property_name.push({
 向名为 `property_name` 的数组属性中 push 一个原始值 `value`。
 
 ```SQL
-INSERT INTO property_name VALUES(value)
+INSERT INTO property_name(_value) VALUES(value)
 ```
 
 等价语句：`property_name.push(value)`
@@ -224,24 +236,29 @@ records.push({
 
 ## TODOs
 
+重点：
+
 - [ ] 数组顺序修改 / 插入位置控制（`splice`）
 
     可能需要通过自定义函数实现了
     
     或者是将 `index` 属性设置为关键字，修改后直接影响整个数组的排序，这样在插入的时候也可以随意控制了
     
-    - [ ] 读取 / 写入时数组 / 对象的转换
+- [ ] 读取 / 写入时数组 / 对象的转换
+
+    要不要限定我这里的输出都是数组（use `filter`, no `find`），这样似乎从概念上更好理解
     
-        要不要限定我这里的输出都是数组（use `filter`, no `find`），这样似乎从概念上更好理解
-        
 - [ ] 类 `a.b.c.d` 格式的深层级数据修改
-- [ ] `WHERE` 与 `find` 的关系对应
 - [ ] 嵌套语句
+
+次重点：
+
 - [ ] 初始化数据结构语句
     - [ ] 对象型属性如何初始化
 - [ ] 内置函数（如网络请求等）
 - [ ] 校验等插入流程、异常流程如何做
-- [ ] 关键字以 `#` 开头是否合理，是否会导致问题
+- [ ] 关键字以 `_` 开头是否合理，是否会导致问题
+- [x] `WHERE` 与 `find` 的关系对应
 
 ## 问题 & 思考
 
