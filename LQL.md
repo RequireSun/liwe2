@@ -17,10 +17,10 @@ LQL 语法说明
 
 | 名称 | 场景 | 介绍 |
 | --- | --- | --- |
-| _index | `WHERE` 子句中 | 作下标查询时用 |
-| _value | `UPDATE` 子句中 | 表示更新指定记录的整个值（而非某个属性） |
-| _name | 保留 | 保留 |
-| _id | 保留 | 保留 |
+| \_\_index__ | `WHERE` 子句中 | 作下标查询时用 |
+| \_\_value__ | `UPDATE` 子句中 | 表示更新指定记录的整个值（而非某个属性） |
+| \_\_name__ | 保留 | 保留 |
+| \_\_id__ | 保留 | 保留 |
 
 ## 数组操作
 
@@ -109,7 +109,7 @@ property_name.push({
 向名为 `property_name` 的数组属性中 push 一个原始值 `value`。
 
 ```SQL
-INSERT INTO property_name(_value) VALUES(value)
+INSERT INTO property_name(__value__) VALUES(value)
 ```
 
 等价语句：`property_name.push(value)`
@@ -119,7 +119,7 @@ INSERT INTO property_name(_value) VALUES(value)
 修改名为 `property_name` 的数组属性中下标为 `n` 的记录（`key1 => value1`，`key2 => value2`）：
 
 ```SQL
-UPDATE property_name SET key1 = value1, key2 = value2 WHERE _index = n
+UPDATE property_name SET key1 = value1, key2 = value2 WHERE __index__ = n
 ```
 
 等价语句：
@@ -134,7 +134,7 @@ property_name[n].key2 = value2;
 修改名为 `property_name` 的数组属性中下标为 `n` 的记录为原始值 `value`。
 
 ```SQL
-UPDATE property_name SET _value=value WHERE _index = n
+UPDATE property_name SET __value__=value WHERE __index__ = n
 ```
 
 等价语句：`property_name[n] = value`
@@ -146,12 +146,12 @@ __TODO：这里是用 `delete` 还是 `splice`?__
 删除名为 `property_name` 的数组属性中下标为 `n` 的记录：
 
 ```SQL
-DELETE FROM property_name WHERE _index = n
+DELETE FROM property_name WHERE __index__ = n
 ```
 
 ### 顺序控制
 
-__TODO__
+直接修改 `__index__` 属性即可。
 
 ## 对象操作
 
@@ -190,7 +190,7 @@ DELETE FROM property_name WHERE key = key1
 读取名为 `property_name` 的属性值：
 
 ```SQL
-SELECT _value from property_name
+SELECT __value__ from property_name
 ```
 
 等价语句：`property_name`
@@ -200,7 +200,7 @@ SELECT _value from property_name
 修改名为 `property_name` 的属性的值为 `value`：
 
 ```SQL
-UPDATE property_name SET _value = value
+UPDATE property_name SET __value__ = value
 ```
 
 等价语句：`property_name = value`
@@ -221,7 +221,7 @@ __TODO__
 
 ```SQL
 INSERT INTO records(name, address, phone)
-    VALUES((SELECT _value FROM name), (SELECT _value FROM address), (SELECT _value FROM phone))
+    VALUES((SELECT __value__ FROM name), (SELECT __value__ FROM address), (SELECT __value__ FROM phone))
 ```
 
 等价语句：
@@ -238,6 +238,7 @@ records.push({
 
 重点：
 
+- [ ] 语法切换到 MySQL
 - [ ] 数组顺序修改 / 插入位置控制（`splice`）
 
     可能需要通过自定义函数实现了
@@ -259,6 +260,7 @@ records.push({
 - [ ] 校验等插入流程、异常流程如何做
 - [ ] 关键字以 `_` 开头是否合理，是否会导致问题
 - [x] `WHERE` 与 `find` 的关系对应
+- [ ] 顺序控制里，自动给剩余项添加 `__index__` 值成了难点
 
 ## 问题 & 思考
 

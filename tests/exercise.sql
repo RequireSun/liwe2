@@ -3,22 +3,26 @@
 -- 测试地址：https://repl.it/repls/SmugSuburbanUserinterface
 -- 请选择 SQLite
 
+-- 注：SQLite 的功能实在是太弱了，考虑转到 MySQL 语法
+-- 日了，SQLite 连 left join 都不支持，还是换 MySQL 吧
+-- 测试地址：https://paiza.io/en/languages/mysql
+
 -- -- -- -- -- 表结构初始化 -- -- -- -- --
 
 CREATE TABLE name (
-    _value VARCHAR(255)
+    __value__ VARCHAR(255)
 );
 
 CREATE TABLE age (
-    _value INTEGER
+    __value__ INTEGER
 );
 
 CREATE TABLE address (
-    _value VARCHAR(255)
+    __value__ VARCHAR(255)
 );
 
 CREATE TABLE phone (
-    _value VARCHAR(255)
+    __value__ VARCHAR(255)
 );
 
 CREATE TABLE records (
@@ -27,14 +31,14 @@ CREATE TABLE records (
     address VARCHAR(255),
     phone VARCHAR(255),
     -- 为了保证在 SQL 中运行正常, 真实情况下无需提供
-    _index INTEGER PRIMARY KEY AUTOINCREMENT
+    __index__ INTEGER PRIMARY KEY AUTOINCREMENT
 );
 
 CREATE TABLE num_arr (
     -- 按理来说 JS 的数组不应该有类型
-    _value BIGINT,
+    __value__ BIGINT,
     -- 为了保证在 SQL 中运行正常, 真实情况下无需提供
-    _index INTEGER PRIMARY KEY AUTOINCREMENT
+    __index__ INTEGER PRIMARY KEY AUTOINCREMENT
 );
 
 CREATE TABLE kv_map (
@@ -54,7 +58,7 @@ INSERT INTO records(name, age, address, phone)
         ('Jack5', 30, 'Hangzhou5', '55555555555'),
         ('Jack5', 35, 'Hangzhou4', '66666666666');
 
-INSERT INTO num_arr(_value)
+INSERT INTO num_arr(__value__)
     VALUES
         (6),
         (5),
@@ -71,6 +75,19 @@ INSERT INTO phone VALUES('13333333333');
 
 INSERT INTO kv_map(key1, key2, key3) VALUES('1', '2', '3');
 
+-- 这个表是用来给数组操作辅助添加 __index__ 用的
+
+CREATE TABLE __indexes__ (
+    __index__ INTEGER PRIMARY KEY AUTOINCREMENT,
+    __useless__ varchar(1)
+);
+
+INSERT INTO __indexes__(__useless__)
+    VALUES
+        (''), (''), (''), (''),
+        (''), (''), (''), (''),
+        (''), (''), (''), ('');
+
 -- SELECT * FROM name;
 -- SELECT * FROM address;
 -- SELECT * FROM phone;
@@ -79,10 +96,10 @@ INSERT INTO kv_map(key1, key2, key3) VALUES('1', '2', '3');
 
 INSERT INTO records(name, age, address, phone)
     VALUES(
-        (SELECT _value FROM name),
-        (SELECT _value FROM age),
-        (SELECT _value FROM address),
-        (SELECT _value FROM phone)
+        (SELECT __value__ FROM name),
+        (SELECT __value__ FROM age),
+        (SELECT __value__ FROM address),
+        (SELECT __value__ FROM phone)
     );
 
 SELECT '-- -- -- ALL records -- -- --';
@@ -126,12 +143,34 @@ SELECT '';
 -- -- -- -- -- 更新操作 -- -- -- -- --
 
 SELECT '-- -- -- Set records(index = 2 -> name = ''Dr. '' + name) -- -- --';
-SELECT '-- -- -- Set records(phone = phone._value -> name = address._value + '' von '' + name) -- -- --';
+SELECT '-- -- -- Set records(phone = phone.__value__ -> name = address.__value__ + '' von '' + name) -- -- --';
 
 -- 这里有魔改空间
-UPDATE records SET name = 'Dr. ' || name WHERE _index = 2;
+UPDATE records SET name = 'Dr. ' || name WHERE __index__ = 2;
 
-UPDATE records SET name = (SELECT _value FROM address) || ' von ' || name WHERE phone = (SELECT _value FROM phone);
+UPDATE records SET name = (SELECT __value__ FROM address) || ' von ' || name WHERE phone = (SELECT __value__ FROM phone);
+
+SELECT * FROM records;
+
+SELECT '';
+
+-- -- -- -- -- 顺序操作 -- -- -- -- --
+
+SELECT '-- -- -- 该部分 LQL 设计与 SQL 不同，所以需要在 SQL 中添加辅助函数 -- -- --';
+SELECT '-- -- -- Update records(4 <= __index__ <= 6 -> 1 <= __index__ <= 3) -- -- --';
+SELECT '-- -- -- Insert records(between 4 < __index__ < 5) -- -- --';
+
+-- 辅助函数 1: 将目标位置与当前位置间的元素全部标记 (置负)
+UPDATE records SET __index__ = -__index__ WHERE __index__ >= 1 AND __index__ < 4;
+-- 此处 3 的含义: 向前平移 3 位
+UPDATE records SET __index__ = __index__ - 3 WHERE __index__ >= 4 AND __index__ <= 6;
+-- 辅助函数 2: 将刚刚标记的元素修正回正确位置 (此处 3 的含义: 插入了 3 个元素)
+UPDATE records SET __index__ = 3 - __index__ WHERE __index__ < 0;
+
+INSERT INTO records(name, age, address, phone, __index__)
+    VALUES
+        ('Pony', 40, 'Shenzhen1', '17777777777', 4)
+        ('Pony', 45, 'Shenzhen2', '18888888888', 5);
 
 SELECT * FROM records;
 
@@ -141,7 +180,7 @@ SELECT '';
 
 SELECT '-- -- -- Delete records(index = 4) -- -- --';
 
-DELETE FROM records WHERE _index = 4;
+DELETE FROM records WHERE __index__ = 4;
 
 -- 更复杂的 WHERE 从句不演示了
 
@@ -152,22 +191,25 @@ SELECT '';
 -- -- -- -- -- 原始值数组 -- -- -- -- --
 
 SELECT '-- -- -- Push num_arr(1) -- -- --';
-SELECT '-- -- -- Set num_arr(_index = 3 -> _value += 10) -- -- --';
+SELECT '-- -- -- Set num_arr(__index__ = 3 -> __value__ += 10) -- -- --';
+SELECT '-- -- -- Delete num_arr(__value__ = 5) -- -- --';
 
-INSERT INTO num_arr(_value) VALUES(1);
+INSERT INTO num_arr(__value__) VALUES(1);
 
-UPDATE num_arr SET _value = _value + 10 WHERE _index = 3;
+UPDATE num_arr SET __value__ = __value__ + 10 WHERE __index__ = 3;
 
-SELECT _value FROM num_arr;
+DELETE FROM num_arr WHERE __value__ = 5;
+
+SELECT __value__ FROM num_arr;
 
 SELECT '';
 
 -- -- -- -- -- 对象修改 / 新增属性 -- -- -- -- --
 
 -- 注：这里有点小区别，普通 SQL 新增一列需要使用 ALTER，但这里是包装 JS 方言，所以用了类 JS 的 UPDATE 语句
-UPDATE kv_map SET key1=(SELECT _value FROM name);
+UPDATE kv_map SET key1=(SELECT __value__ FROM name);
 
-SELECT '-- -- -- Set map(key1 = name._value) -- -- --';
+SELECT '-- -- -- Set map(key1 = name.__value__) -- -- --';
 
 SELECT * FROM kv_map;
 
