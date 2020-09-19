@@ -31,14 +31,14 @@ CREATE TABLE records (
     address VARCHAR(255),
     phone VARCHAR(255),
     -- 为了保证在 SQL 中运行正常, 真实情况下无需提供
-    __index__ INTEGER PRIMARY KEY AUTOINCREMENT
+    __index__ INTEGER NOT NULL AUTO_INCREMENT UNIQUE
 );
 
 CREATE TABLE num_arr (
     -- 按理来说 JS 的数组不应该有类型
     __value__ BIGINT,
     -- 为了保证在 SQL 中运行正常, 真实情况下无需提供
-    __index__ INTEGER PRIMARY KEY AUTOINCREMENT
+    __index__ INTEGER NOT NULL AUTO_INCREMENT UNIQUE
 );
 
 CREATE TABLE kv_map (
@@ -78,7 +78,7 @@ INSERT INTO kv_map(key1, key2, key3) VALUES('1', '2', '3');
 -- 这个表是用来给数组操作辅助添加 __index__ 用的
 
 CREATE TABLE __indexes__ (
-    __index__ INTEGER PRIMARY KEY AUTOINCREMENT,
+    __index__ INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
     __useless__ varchar(1)
 );
 
@@ -146,9 +146,9 @@ SELECT '-- -- -- Set records(index = 2 -> name = ''Dr. '' + name) -- -- --';
 SELECT '-- -- -- Set records(phone = phone.__value__ -> name = address.__value__ + '' von '' + name) -- -- --';
 
 -- 这里有魔改空间
-UPDATE records SET name = 'Dr. ' || name WHERE __index__ = 2;
+UPDATE records SET name = CONCAT('Dr. ', name) WHERE __index__ = 2;
 
-UPDATE records SET name = (SELECT __value__ FROM address) || ' von ' || name WHERE phone = (SELECT __value__ FROM phone);
+UPDATE records SET name = CONCAT((SELECT __value__ FROM address), ' von ', name) WHERE phone = (SELECT __value__ FROM phone);
 
 SELECT * FROM records;
 
@@ -167,10 +167,10 @@ UPDATE records SET __index__ = __index__ - 3 WHERE __index__ >= 4 AND __index__ 
 -- 辅助函数 2: 将刚刚标记的元素修正回正确位置 (此处 3 的含义: 插入了 3 个元素)
 UPDATE records SET __index__ = 3 - __index__ WHERE __index__ < 0;
 
-INSERT INTO records(name, age, address, phone, __index__)
-    VALUES
-        ('Pony', 40, 'Shenzhen1', '17777777777', 4)
-        ('Pony', 45, 'Shenzhen2', '18888888888', 5);
+-- INSERT INTO records(name, age, address, phone, __index__)
+--     VALUES
+--         ('Pony', 40, 'Shenzhen1', '17777777777', 4),
+--         ('Pony', 45, 'Shenzhen2', '18888888888', 5);
 
 SELECT * FROM records;
 
